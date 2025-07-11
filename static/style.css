@@ -1,0 +1,174 @@
+/* Additional Custom Styles */
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--primary-color);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-dark);
+}
+
+/* Loading animation */
+.loading {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: #fff;
+    animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Hover effects */
+.hover-lift {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hover-lift:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+/* Custom button styles */
+.btn-glow {
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-glow::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+}
+
+.btn-glow:hover::before {
+    left: 100%;
+}
+
+/* Card animations */
+.card-animate {
+    animation: cardSlideIn 0.6s ease-out;
+}
+
+@keyframes cardSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Rating animation */
+.rating-animate {
+    animation: ratingPulse 0.5s ease-in-out;
+}
+
+@keyframes ratingPulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+/* Success animation */
+.success-checkmark {
+    animation: checkmark 0.5s ease-in-out;
+}
+
+@keyframes checkmark {
+    0% { transform: scale(0); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+
+/* Gradient text */
+.gradient-text {
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Custom form focus */
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(79, 70, 229, 0.25);
+    transform: scale(1.02);
+}
+
+/* Table row hover */
+.table tbody tr {
+    transition: all 0.3s ease;
+}
+
+.table tbody tr:hover {
+    background-color: rgba(79, 70, 229, 0.05);
+    transform: scale(1.01);
+}
+
+/* Responsive improvements */
+@media (max-width: 768px) {
+    .main-container {
+        margin: 1rem;
+        padding: 1rem;
+    }
+    
+    .stats-card {
+        margin-bottom: 1rem;
+    }
+    
+    .table-responsive {
+        font-size: 0.875rem;
+    }
+    
+    .btn {
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --text-primary: #f1f5f9;
+        --text-secondary: #94a3b8;
+        --border-color: #334155;
+    }
+    
+    body {
+        background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    }
+    
+    .main-container {
+        background: rgba(30, 41, 59, 0.95);
+        color: var(--text-primary);
+    }
+    
+    .card {
+        background: rgba(51, 65, 85, 0.95);
+        color: var(--text-primary);
+    }
+} 

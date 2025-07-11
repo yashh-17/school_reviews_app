@@ -1,0 +1,15 @@
+# Flask Configuration
+SECRET_KEY=your_secret_key_here
+
+# Database Configuration
+DATABASE_TYPE=sqlite
+
+# MySQL Configuration (uncomment and configure if using MySQL)
+# DATABASE_TYPE=mysql
+# MYSQL_HOST=localhost
+# MYSQL_USER=root
+# MYSQL_PASSWORD=your_mysql_password
+# MYSQL_DATABASE=school_reviews
+
+# SQLite Configuration
+SQLITE_DATABASE=school_reviews.db 
