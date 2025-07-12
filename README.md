@@ -1,61 +1,81 @@
-# School Reviews Flask Application
+# 🎓 School Reviews Flask Application
 
-A complete Flask web application that allows users to submit and view school reviews using MySQL or SQLite database.
+A modern Flask web application that allows users to submit and view school reviews with support for both MySQL and SQLite databases.
 
-## ✅ **Requirements Met**
+## 📋 Table of Contents
+- [Overview](#overview)
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Quick Start](#quick-start)
+- [Environment Variables](#environment-variables)
+- [Database Setup](#database-setup)
+- [API Routes](#api-routes)
+- [Screenshots](#screenshots)
+- [Demo](#demo)
+- [Contributing](#contributing)
 
-### **Core Features:**
-- ✅ **Flask Routing & Templating** - Clean route structure with template inheritance
-- ✅ **MySQL Database Integration** - Full MySQL support with SQLite fallback
-- ✅ **HTML Form Handling** - Complete form validation and processing
-- ✅ **Bootstrap Layout** - Modern, responsive UI design
-- ✅ **Python Code Structure** - Well-organized, maintainable code
+## 🎯 Overview
 
-### **Technical Requirements:**
-- ✅ **Working Flask app** - Fully functional application
-- ✅ **Reviews stored and retrieved from database** - MySQL/SQLite support
-- ✅ **Clean UI using Bootstrap** - Modern, responsive design
-- ✅ **Form validation** - Comprehensive input validation
-- ✅ **Environment variables** - Config.py for database credentials
+This Flask application provides a complete school review system where users can:
+- Submit reviews for schools with ratings and comments
+- View all submitted reviews in a clean, responsive interface
+- Rate schools on a 1-5 scale with detailed feedback
+- Experience a modern UI built with Bootstrap
 
-## 📁 **Project Structure**
+## ✨ Features
 
+- **📝 Review Submission**: Easy-to-use form for adding school reviews
+- **⭐ Rating System**: 1-5 star rating with validation
+- **📊 Review Display**: Clean table layout showing all reviews
+- **🔒 Form Validation**: Client and server-side validation
+- **📱 Responsive Design**: Mobile-friendly Bootstrap interface
+- **🗄️ Database Flexibility**: Support for both MySQL and SQLite
+- **⚙️ Environment Configuration**: Secure credential management
+
+## 🛠️ Tech Stack
+
+- **Backend**: Flask (Python)
+- **Database**: MySQL / SQLite
+- **Frontend**: HTML5, CSS3, Bootstrap 5
+- **Templates**: Jinja2
+- **Configuration**: python-dotenv
+- **Database Connector**: mysql-connector-python
+
+## 🚀 Quick Start
+
+### Prerequisites
+- Python 3.7+
+- MySQL (optional - SQLite is default)
+- pip
+
+### 1. Clone the Repository
+```bash
+git clone https://github.com/yourusername/school_reviews_app.git
+cd school_reviews_app
 ```
-school_reviews_app/
-├── app.py                 # Main Flask application
-├── config.py              # Database configuration
-├── requirements.txt       # Python dependencies
-├── README.md             # This file
-├── env_example.txt       # Environment variables example
-├── templates/            # HTML templates
-│   ├── base.html         # Base template with navigation
-│   ├── add_review.html   # Add review form
-│   └── reviews.html      # Display all reviews
-└── static/               # Static files (CSS, JS, images)
-```
 
-## 🛠️ **Tech Stack Used**
-
-- **Flask** - Web framework
-- **MySQL** - Primary database (with SQLite fallback)
-- **Jinja2 Templates** - Template engine
-- **Bootstrap** - UI framework
-- **Python-dotenv** - Environment variable management
-
-## 🚀 **Quick Start**
-
-### **1. Install Dependencies**
+### 2. Install Dependencies
 ```bash
 pip install -r requirements.txt
 ```
 
-### **2. Configure Database**
-Copy `env_example.txt` to `.env` and configure:
+### 3. Set Up Environment Variables
+Create a `.env` file in the root directory:
 ```bash
-# For SQLite (default)
-DATABASE_TYPE=sqlite
+# Copy the example file
+cp env_example.txt .env
+```
 
-# For MySQL
+### 4. Configure Database
+Choose your database type and configure accordingly:
+
+#### Option A: SQLite (Default)
+```bash
+DATABASE_TYPE=sqlite
+```
+
+#### Option B: MySQL
+```bash
 DATABASE_TYPE=mysql
 MYSQL_HOST=localhost
 MYSQL_USER=root
@@ -63,112 +83,152 @@ MYSQL_PASSWORD=your_password
 MYSQL_DATABASE=school_reviews
 ```
 
-### **3. Run the Application**
+### 5. Run the Application
 ```bash
 python app.py
 ```
 
-### **4. Access the Application**
-- **URL:** `http://127.0.0.1:5000`
-- **Add Reviews:** `/addreview`
-- **View Reviews:** `/reviews`
+### 6. Access the Application
+Open your browser and navigate to: `http://127.0.0.1:5000`
 
-## 📋 **Routes Implemented**
+## 🔧 Environment Variables
+
+Create a `.env` file in the root directory with the following variables:
+
+```bash
+# Required
+SECRET_KEY=your_secret_key_here
+DATABASE_TYPE=sqlite  # or 'mysql'
+
+# MySQL Configuration (only if using MySQL)
+MYSQL_HOST=localhost
+MYSQL_USER=root
+MYSQL_PASSWORD=your_password
+MYSQL_DATABASE=school_reviews
+
+# SQLite Configuration (only if using SQLite)
+SQLITE_DATABASE=school_reviews.db
+```
+
+## 🗄️ Database Setup
+
+### MySQL Setup
+1. Install MySQL Server
+2. Create a database:
+```sql
+CREATE DATABASE school_reviews;
+```
+3. Import the schema:
+```bash
+mysql -u root -p school_reviews < school_reviews.sql
+```
+
+### SQLite Setup
+The database will be created automatically when you first run the application.
+
+### Database Schema
+```sql
+CREATE TABLE reviews (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    school_name VARCHAR(100) NOT NULL,
+    reviewer_name VARCHAR(100) NOT NULL,
+    rating INT NOT NULL CHECK (rating >= 1 AND rating <= 5),
+    comment TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+## 📡 API Routes
 
 | Route | Method | Description |
 |-------|--------|-------------|
 | `/` | GET | Redirects to reviews page |
-| `/addreview` | GET/POST | Display form and handle review submission |
-| `/reviews` | GET | Display all reviews in table format |
+| `/addreview` | GET | Display review submission form |
+| `/addreview` | POST | Handle review submission |
+| `/reviews` | GET | Display all reviews |
 
-## 🗄️ **Database Schema**
+## 📸 Screenshots
 
-### **MySQL Table:**
-```sql
-CREATE TABLE reviews (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    school_name VARCHAR(100),
-    reviewer_name VARCHAR(100),
-    rating INT,
-    comment TEXT
-);
+### Main Reviews Page
+![Reviews Page](screenshots/reviews-page.png)
+
+### Add Review Form
+![Add Review Form](screenshots/add-review-form.png)
+
+### Mobile Responsive Design
+![Mobile View](screenshots/mobile-view.png)
+
+## 🎥 Demo
+
+### Live Demo
+🔗 **Live Demo**: [https://your-demo-link.com](https://your-demo-link.com)
+
+### Demo Video
+📹 **Demo Video**: [Google Drive Link](https://drive.google.com/your-video-link) or [YouTube Link](https://youtube.com/your-video-link)
+
+## 📁 Project Structure
+
+```
+school_reviews_app/
+├── app.py                 # Main Flask application
+├── config.py              # Database configuration
+├── requirements.txt       # Python dependencies
+├── school_reviews.sql    # Database schema and sample data
+├── README.md             # This file
+├── .env                  # Environment variables (create this)
+├── templates/            # HTML templates
+│   ├── base.html         # Base template with navigation
+│   ├── add_review.html   # Add review form
+│   └── reviews.html      # Display all reviews
+└── static/               # Static files
+    └── style.css         # Custom CSS styles
 ```
 
-### **SQLite Table:**
-```sql
-CREATE TABLE reviews (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    school_name TEXT NOT NULL,
-    reviewer_name TEXT NOT NULL,
-    rating INTEGER NOT NULL,
-    comment TEXT NOT NULL
-);
+## 🐛 Troubleshooting
+
+### Common Issues
+
+**MySQL Connection Error:**
+```bash
+# Check if MySQL is running
+sudo service mysql status
+
+# Verify credentials in .env file
+# Ensure database exists
+mysql -u root -p -e "CREATE DATABASE IF NOT EXISTS school_reviews;"
 ```
 
-## 🎨 **Features**
-
-### **Form Validation:**
-- ✅ All fields required
-- ✅ Rating validation (1-5)
-- ✅ Input sanitization
-- ✅ Error messages
-
-### **UI/UX:**
-- ✅ Responsive Bootstrap design
-- ✅ Star rating display
-- ✅ Flash messages for feedback
-- ✅ Clean table layout
-- ✅ Mobile-friendly navigation
-
-### **Database Features:**
-- ✅ Automatic table creation
-- ✅ MySQL and SQLite support
-- ✅ Environment-based configuration
-- ✅ Error handling and logging
-
-## 🔧 **Configuration**
-
-The application uses `config.py` for centralized configuration:
-
-```python
-class Config:
-    SECRET_KEY = os.environ.get('SECRET_KEY')
-    MYSQL_HOST = os.environ.get('MYSQL_HOST')
-    MYSQL_USER = os.environ.get('MYSQL_USER')
-    MYSQL_PASSWORD = os.environ.get('MYSQL_PASSWORD')
-    MYSQL_DATABASE = os.environ.get('MYSQL_DATABASE')
-    DATABASE_TYPE = os.environ.get('DATABASE_TYPE')
+**Port Already in Use:**
+```bash
+# Change port in app.py
+app.run(debug=True, port=5001)
 ```
 
-## 🐛 **Troubleshooting**
+**Import Errors:**
+```bash
+# Ensure virtual environment is activated
+source .venv/bin/activate  # Linux/Mac
+.venv\Scripts\activate     # Windows
+```
 
-### **MySQL Connection Issues:**
-1. Ensure MySQL server is running
-2. Check credentials in `.env` file
-3. Verify MySQL user permissions
+## 🤝 Contributing
 
-### **SQLite Issues:**
-1. Check file permissions
-2. Ensure write access to project directory
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
-### **Port Issues:**
-- Change port in `app.py`: `app.run(debug=True, port=5001)`
+## 📝 License
 
-## 📝 **Development Notes**
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-- **Database:** Supports both MySQL and SQLite
-- **Templates:** Uses Jinja2 with Bootstrap
-- **Validation:** Client and server-side validation
-- **Security:** Environment variables for sensitive data
-- **Error Handling:** Comprehensive error messages
+## 👨‍💻 Author
 
-## 🎯 **Skills Demonstrated**
+**Your Name**
+- GitHub: [@yourusername](https://github.com/yourusername)
+- LinkedIn: [Your LinkedIn](https://linkedin.com/in/yourprofile)
 
-✅ **Flask Routing & Templating**
-✅ **MySQL Database Integration** 
-✅ **HTML Form Handling**
-✅ **Bootstrap Layout**
-✅ **Python Code Structure**
-✅ **Environment Configuration**
-✅ **Error Handling**
-✅ **Form Validation** 
+---
+
+⭐ **Star this repository if you found it helpful!** 

@@ -1,349 +1,122 @@
 {% extends "base.html" %}
-
 {% block title %}All Reviews - School Reviews{% endblock %}
-
 {% block content %}
 <div class="row">
     <div class="col-12">
-        <!-- Header Section -->
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
-                <h2 class="mb-1">
-                    <i class="fas fa-list me-2 text-primary"></i>School Reviews
-                </h2>
+                <h2 class="mb-1"><i class="fas fa-list me-2 text-primary"></i>School Reviews</h2>
                 <p class="text-muted mb-0">Discover what others are saying about schools</p>
             </div>
-            <a href="{{ url_for('add_review') }}" class="btn btn-primary">
-                <i class="fas fa-plus me-2"></i>Add New Review
-            </a>
+            <a href="{{ url_for('add_review') }}" class="btn btn-primary"><i class="fas fa-plus me-2"></i>Add New Review</a>
         </div>
-        
-        <!-- Statistics Cards -->
         {% if reviews %}
-        <div class="row mb-4">
-            <div class="col-md-3 col-sm-6 mb-3">
-                <div class="stats-card">
-                    <div class="stats-number">{{ reviews|length }}</div>
-                    <div class="stats-label">Total Reviews</div>
-                </div>
+        <div class="stats-row">
+            <div class="stats-card">
+                <div class="stats-number">{{ reviews|length }}</div>
+                <div class="stats-label">Total Reviews</div>
             </div>
-            <div class="col-md-3 col-sm-6 mb-3">
-                <div class="stats-card">
-                    <div class="stats-number">{{ reviews|map(attribute='school_name')|unique|list|length }}</div>
-                    <div class="stats-label">Schools Reviewed</div>
-                </div>
+            <div class="stats-card">
+                <div class="stats-number">{{ reviews|map(attribute='school_name')|unique|list|length }}</div>
+                <div class="stats-label">Schools Reviewed</div>
             </div>
-            <div class="col-md-3 col-sm-6 mb-3">
-                <div class="stats-card">
-                    <div class="stats-number">
-                        {% set avg_rating = reviews|map(attribute='rating')|sum / reviews|length %}
-                        {{ "%.1f"|format(avg_rating) }}
-                    </div>
-                    <div class="stats-label">Average Rating</div>
-                </div>
-            </div>
-            <div class="col-md-3 col-sm-6 mb-3">
-                <div class="stats-card">
-                    <div class="stats-number">
-                        {% set five_star = reviews|selectattr('rating', 'equalto', 5)|list|length %}
-                        {{ five_star }}
-                    </div>
-                    <div class="stats-label">5-Star Reviews</div>
-                </div>
+            <div class="stats-card">
+                <div class="stats-number">{% set avg_rating = reviews|map(attribute='rating')|sum / reviews|length %}{{ "%.1f"|format(avg_rating) }}</div>
+                <div class="stats-label">Average Rating</div>
             </div>
         </div>
-        {% endif %}
-        
-        <!-- Reviews Section -->
-        {% if reviews %}
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="mb-0">
-                        <i class="fas fa-table me-2"></i>All Reviews
-                    </h5>
-                </div>
-                <div class="card-body p-0">
-                    <div class="table-responsive">
-                        <table class="table table-hover mb-0">
-                            <thead>
-                                <tr>
-                                    <th><i class="fas fa-school me-1"></i>School Name</th>
-                                    <th><i class="fas fa-user me-1"></i>Reviewer</th>
-                                    <th><i class="fas fa-star me-1"></i>Rating</th>
-                                    <th><i class="fas fa-comment me-1"></i>Experience</th>
-                                    <th><i class="fas fa-calendar me-1"></i>Date</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for review in reviews %}
-                                <tr class="fade-in" style="animation-delay: {{ loop.index * 0.1 }}s;">
-                                    <td>
-                                        <div class="d-flex align-items-center">
-                                            <div class="school-icon me-3">
-                                                <i class="fas fa-graduation-cap text-primary"></i>
-                                            </div>
-                                            <div>
-                                                <strong class="d-block">{{ review.school_name }}</strong>
-                                                <small class="text-muted">School</small>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="d-flex align-items-center">
-                                            <div class="avatar me-2">
-                                                <i class="fas fa-user-circle text-secondary"></i>
-                                            </div>
-                                            <span>{{ review.reviewer_name }}</span>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="rating-display">
-                                            <div class="rating-stars">
-                                                {% for i in range(5) %}
-                                                    {% if i < review.rating %}
-                                                        <i class="fas fa-star filled"></i>
-                                                    {% else %}
-                                                        <i class="far fa-star"></i>
-                                                    {% endif %}
-                                                {% endfor %}
-                                            </div>
-                                            <span class="rating-text ms-2">
-                                                <strong>{{ review.rating }}/5</strong>
-                                                <small class="text-muted d-block">
-                                                    {% if review.rating == 5 %}Excellent{% endif %}
-                                                    {% if review.rating == 4 %}Very Good{% endif %}
-                                                    {% if review.rating == 3 %}Good{% endif %}
-                                                    {% if review.rating == 2 %}Fair{% endif %}
-                                                    {% if review.rating == 1 %}Poor{% endif %}
-                                                </small>
-                                            </span>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="comment-preview">
-                                            <div class="comment-text" title="{{ review.comment }}">
-                                                {{ review.comment[:100] }}{% if review.comment|length > 100 %}...{% endif %}
-                                            </div>
-                                            {% if review.comment|length > 100 %}
-                                            <button class="btn btn-sm btn-link p-0 mt-1" 
-                                                    onclick="showFullComment(this, '{{ review.comment|replace("'", "\\'") }}')">
-                                                Read more
-                                            </button>
-                                            {% endif %}
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="date-info">
-                                            <small class="text-muted">
-                                                {% if review.id %}
-                                                    Review #{{ review.id }}
-                                                {% endif %}
-                                            </small>
-                                        </div>
-                                    </td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Summary Section -->
-            <div class="mt-4">
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="card">
-                            <div class="card-body">
-                                <h6 class="card-title text-primary">
-                                    <i class="fas fa-chart-bar me-2"></i>Rating Distribution
-                                </h6>
-                                <div class="rating-distribution">
-                                    {% for i in range(5, 0, -1) %}
-                                    {% set count = reviews|selectattr('rating', 'equalto', i)|list|length %}
-                                    {% set percentage = (count / reviews|length * 100)|round %}
-                                    <div class="rating-bar">
-                                        <span class="rating-label">{{ i }}⭐</span>
-                                        <div class="progress">
-                                            <div class="progress-bar bg-warning" style="width: {{ percentage }}%"></div>
-                                        </div>
-                                        <span class="rating-count">{{ count }}</span>
-                                    </div>
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th><i class="fas fa-school me-1"></i>School Name</th>
+                        <th><i class="fas fa-user me-1"></i>Reviewer</th>
+                        <th><i class="fas fa-star me-1"></i>Rating</th>
+                        <th><i class="fas fa-comment me-1"></i>Experience</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for review in reviews %}
+                    <tr class="fade-in" style="animation-delay: {{ loop.index * 0.1 }}s;">
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <div class="school-icon me-3"><i class="fas fa-graduation-cap text-primary"></i></div>
+                                <div><strong class="d-block">{{ review.school_name }}</strong><small class="text-muted">School</small></div>
+                            </div>
+                        </td>
+                        <td>{{ review.reviewer_name }}</td>
+                        <td>
+                            <div class="rating-display">
+                                <div class="rating-stars">
+                                    {% for i in range(1, 6) %}
+                                        <i class="fas fa-star{% if i <= review.rating %} filled{% else %} far{% endif %}"></i>
                                     {% endfor %}
                                 </div>
+                                <span class="rating-text ms-2"><strong>{{ review.rating }}/5</strong><small class="text-muted d-block">{% if review.rating == 5 %}Excellent{% endif %}{% if review.rating == 4 %}Very Good{% endif %}{% if review.rating == 3 %}Good{% endif %}{% if review.rating == 2 %}Fair{% endif %}{% if review.rating == 1 %}Poor{% endif %}</small></span>
                             </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="card">
-                            <div class="card-body">
-                                <h6 class="card-title text-primary">
-                                    <i class="fas fa-info-circle me-2"></i>Quick Stats
-                                </h6>
-                                <ul class="list-unstyled mb-0">
-                                    <li class="mb-2">
-                                        <i class="fas fa-check-circle text-success me-2"></i>
-                                        <strong>{{ reviews|length }}</strong> total reviews submitted
-                                    </li>
-                                    <li class="mb-2">
-                                        <i class="fas fa-school text-primary me-2"></i>
-                                        <strong>{{ reviews|map(attribute='school_name')|unique|list|length }}</strong> different schools reviewed
-                                    </li>
-                                    <li class="mb-2">
-                                        <i class="fas fa-star text-warning me-2"></i>
-                                        Average rating: <strong>{{ "%.1f"|format(reviews|map(attribute='rating')|sum / reviews|length) }}/5</strong>
-                                    </li>
-                                    <li>
-                                        <i class="fas fa-users text-info me-2"></i>
-                                        <strong>{{ reviews|map(attribute='reviewer_name')|unique|list|length }}</strong> unique reviewers
-                                    </li>
-                                </ul>
+                        </td>
+                        <td>
+                            <div class="comment-preview">
+                                <div class="comment-text" title="{{ review.comment }}">{{ review.comment[:100] }}{% if review.comment|length > 100 %}...{% endif %}</div>
+                                {% if review.comment|length > 100 %}
+                                <button class="btn btn-sm btn-link p-0 mt-1" onclick="showFullComment(this, '{{ review.comment|replace("'", "\\'") }}')">Read more</button>
+                                {% endif %}
                             </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
         {% else %}
-            <!-- Empty State -->
-            <div class="card">
-                <div class="card-body empty-state">
-                    <i class="fas fa-inbox floating"></i>
-                    <h4 class="text-muted mb-3">No Reviews Yet</h4>
-                    <p class="text-muted mb-4">Be the first to share your school experience and help others make informed decisions!</p>
-                    <a href="{{ url_for('add_review') }}" class="btn btn-primary btn-lg">
-                        <i class="fas fa-plus me-2"></i>Add First Review
-                    </a>
-                </div>
+        <div class="card">
+            <div class="card-body empty-state">
+                <i class="fas fa-inbox floating"></i>
+                <h4 class="text-muted mb-3">No Reviews Yet</h4>
+                <p class="text-muted mb-4">Be the first to share your school experience and help others make informed decisions!</p>
+                <a href="{{ url_for('add_review') }}" class="btn btn-primary btn-lg"><i class="fas fa-plus me-2"></i>Add First Review</a>
             </div>
+        </div>
         {% endif %}
     </div>
 </div>
-
-<!-- Full Comment Modal -->
 <div class="modal fade" id="commentModal" tabindex="-1">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">
-                    <i class="fas fa-comment me-2"></i>Full Review
-                </h5>
+                <h5 class="modal-title"><i class="fas fa-comment me-2"></i>Full Review</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
-            <div class="modal-body">
-                <p id="fullComment"></p>
-            </div>
+            <div class="modal-body"><p id="fullComment"></p></div>
         </div>
     </div>
 </div>
-
 <style>
-.school-icon {
-    width: 40px;
-    height: 40px;
-    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-}
-
-.avatar {
-    font-size: 1.5rem;
-}
-
-.rating-display {
-    display: flex;
-    align-items: center;
-}
-
-.rating-stars {
-    display: flex;
-    gap: 2px;
-}
-
-.rating-stars .fas.fa-star.filled {
-    color: var(--accent-color);
-}
-
-.rating-stars .far.fa-star {
-    color: #e5e7eb;
-}
-
-.rating-text {
-    font-size: 0.875rem;
-}
-
-.comment-preview {
-    max-width: 300px;
-}
-
-.comment-text {
-    line-height: 1.4;
-    color: var(--text-primary);
-}
-
-.rating-distribution {
-    margin-top: 1rem;
-}
-
-.rating-bar {
-    display: flex;
-    align-items: center;
-    margin-bottom: 0.5rem;
-    gap: 1rem;
-}
-
-.rating-label {
-    min-width: 40px;
-    font-weight: 600;
-}
-
-.progress {
-    flex: 1;
-    height: 8px;
-    border-radius: 4px;
-}
-
-.rating-count {
-    min-width: 30px;
-    text-align: right;
-    font-weight: 600;
-    color: var(--text-secondary);
-}
-
-.date-info {
-    font-size: 0.875rem;
-}
-
-@media (max-width: 768px) {
-    .d-flex.justify-content-between {
-        flex-direction: column;
-        gap: 1rem;
-    }
-    
-    .stats-card {
-        margin-bottom: 1rem;
-    }
-    
-    .table-responsive {
-        font-size: 0.875rem;
-    }
-}
+.school-icon { width: 40px; height: 40px; background: linear-gradient(135deg, var(--primary-color), var(--primary-dark)); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; }
+.avatar { font-size: 1.5rem; }
+.rating-display { display: flex; align-items: center; }
+.rating-stars { display: flex; gap: 2px; }
+.rating-stars .fas.fa-star.filled { color: var(--accent-color); }
+.rating-stars .far.fa-star { color: #e5e7eb; }
+.rating-text { font-size: 0.875rem; }
+.comment-preview { max-width: 300px; }
+.comment-text { line-height: 1.4; color: var(--text-primary); }
+.rating-distribution { margin-top: 1rem; }
+.rating-bar { display: flex; align-items: center; margin-bottom: 0.5rem; gap: 1rem; }
+.rating-label { min-width: 40px; font-weight: 600; }
+.progress { flex: 1; height: 8px; border-radius: 4px; }
+.rating-count { min-width: 30px; text-align: right; font-weight: 600; color: var(--text-secondary); }
+.date-info { font-size: 0.875rem; }
+@media (max-width: 768px) { .d-flex.justify-content-between { flex-direction: column; gap: 1rem; } .stats-card { margin-bottom: 1rem; } .table-responsive { font-size: 0.875rem; } }
 </style>
-
 <script>
 function showFullComment(button, comment) {
     document.getElementById('fullComment').textContent = comment;
     new bootstrap.Modal(document.getElementById('commentModal')).show();
 }
-
-// Add animation to table rows
 document.addEventListener('DOMContentLoaded', function() {
     const rows = document.querySelectorAll('tbody tr');
-    rows.forEach((row, index) => {
-        row.style.animationDelay = `${index * 0.1}s`;
-    });
+    rows.forEach((row, index) => { row.style.animationDelay = `${index * 0.1}s`; });
 });
 </script>
 {% endblock %} 
